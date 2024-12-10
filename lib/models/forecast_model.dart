@@ -1,56 +1,153 @@
+import 'dart:convert';
+
 class ForecastModel {
-  final int id;
-  final DateTime date;
-  final double temperature;
-  final double minTemperature;
-  final double maxTemperature;
-  final String description;
-  final double humidity;
-  final double windSpeed;
-  final String windDirection;
+  bool status;
+  String message;
+  List<Result> result;
 
   ForecastModel({
-    required this.id,
-    required this.date,
-    required this.temperature,
-    required this.minTemperature,
-    required this.maxTemperature,
-    required this.description,
-    required this.humidity,
-    required this.windSpeed,
-    required this.windDirection,
+    required this.status,
+    required this.message,
+    required this.result,
   });
 
-  factory ForecastModel.fromJson(Map<String, dynamic> json) {
-    return ForecastModel(
-      id: json['id'] ?? 0,
-      date: json['date'] != null
-          ? DateTime.parse(json['date'])
-          : DateTime.now(),
-      temperature: (json['temperature'] ?? 0.0).toDouble(),
-      minTemperature: (json['min_temperature'] ?? 0.0).toDouble(),
-      maxTemperature: (json['max_temperature'] ?? 0.0).toDouble(),
-      description: json['description'] ?? 'No description',
-      humidity: (json['humidity'] ?? 0.0).toDouble(),
-      windSpeed: (json['wind_speed'] ?? 0.0).toDouble(),
-      windDirection: json['wind_direction'] ?? 'N/A',
-    );
-  }
+  factory ForecastModel.fromRawJson(String str) => ForecastModel.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory ForecastModel.fromJson(Map<String, dynamic> json) => ForecastModel(
+    status: json["status"],
+    message: json["message"],
+    result: List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
+  );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'date': date.toIso8601String(),
-    'temperature': temperature,
-    'min_temperature': minTemperature,
-    'max_temperature': maxTemperature,
-    'description': description,
-    'humidity': humidity,
-    'wind_speed': windSpeed,
-    'wind_direction': windDirection,
+    "status": status,
+    "message": message,
+    "result": List<dynamic>.from(result.map((x) => x.toJson())),
   };
+}
 
-  @override
-  String toString() {
-    return 'ForecastModel(date: $date, temp: $temperature°C, desc: $description)';
-  }
+class Result {
+  DateTime stepStart;
+  DateTime stepEnd;
+  String date;
+  String weekday;
+  String rfUnit;
+  String tempUnit;
+  String rhUnit;
+  String windspdUnit;
+  String winddirUnit;
+  String cldcvrUnit;
+  String windgustUnit;
+  String icon;
+  String type;
+  Cldcvr rf;
+  Cldcvr temp;
+  Cldcvr rh;
+  Cldcvr windspd;
+  Cldcvr winddir;
+  Cldcvr cldcvr;
+  Cldcvr windgust;
+
+  Result({
+    required this.stepStart,
+    required this.stepEnd,
+    required this.date,
+    required this.weekday,
+    required this.rfUnit,
+    required this.tempUnit,
+    required this.rhUnit,
+    required this.windspdUnit,
+    required this.winddirUnit,
+    required this.cldcvrUnit,
+    required this.windgustUnit,
+    required this.icon,
+    required this.type,
+    required this.rf,
+    required this.temp,
+    required this.rh,
+    required this.windspd,
+    required this.winddir,
+    required this.cldcvr,
+    required this.windgust,
+  });
+
+  factory Result.fromRawJson(String str) => Result.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+    stepStart: DateTime.parse(json["step_start"]),
+    stepEnd: DateTime.parse(json["step_end"]),
+    date: json["date"],
+    weekday: json["weekday"],
+    rfUnit: json["rf_unit"],
+    tempUnit: json["temp_unit"],
+    rhUnit: json["rh_unit"],
+    windspdUnit: json["windspd_unit"],
+    winddirUnit: json["winddir_unit"],
+    cldcvrUnit: json["cldcvr_unit"],
+    windgustUnit: json["windgust_unit"],
+    icon: json["icon"],
+    type: json["type"],
+    rf: Cldcvr.fromJson(json["rf"]),
+    temp: Cldcvr.fromJson(json["temp"]),
+    rh: Cldcvr.fromJson(json["rh"]),
+    windspd: Cldcvr.fromJson(json["windspd"]),
+    winddir: Cldcvr.fromJson(json["winddir"]),
+    cldcvr: Cldcvr.fromJson(json["cldcvr"]),
+    windgust: Cldcvr.fromJson(json["windgust"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "step_start": "${stepStart.year.toString().padLeft(4, '0')}-${stepStart.month.toString().padLeft(2, '0')}-${stepStart.day.toString().padLeft(2, '0')}",
+    "step_end": "${stepEnd.year.toString().padLeft(4, '0')}-${stepEnd.month.toString().padLeft(2, '0')}-${stepEnd.day.toString().padLeft(2, '0')}",
+    "date": date,
+    "weekday": weekday,
+    "rf_unit": rfUnit,
+    "temp_unit": tempUnit,
+    "rh_unit": rhUnit,
+    "windspd_unit": windspdUnit,
+    "winddir_unit": winddirUnit,
+    "cldcvr_unit": cldcvrUnit,
+    "windgust_unit": windgustUnit,
+    "icon": icon,
+    "type": type,
+    "rf": rf.toJson(),
+    "temp": temp.toJson(),
+    "rh": rh.toJson(),
+    "windspd": windspd.toJson(),
+    "winddir": winddir.toJson(),
+    "cldcvr": cldcvr.toJson(),
+    "windgust": windgust.toJson(),
+  };
+}
+
+class Cldcvr {
+  double valMin;
+  double valAvg;
+  double valMax;
+
+  Cldcvr({
+    required this.valMin,
+    required this.valAvg,
+    required this.valMax,
+  });
+
+  factory Cldcvr.fromRawJson(String str) => Cldcvr.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Cldcvr.fromJson(Map<String, dynamic> json) => Cldcvr(
+    valMin: json["val_min"]?.toDouble(),
+    valAvg: json["val_avg"]?.toDouble(),
+    valMax: json["val_max"]?.toDouble(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "val_min": valMin,
+    "val_avg": valAvg,
+    "val_max": valMax,
+  };
 }

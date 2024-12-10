@@ -1,40 +1,15 @@
 class AlertModel {
   final int id;
-  final String name;
-  final double value;
-  final String unit;
-  final DateTime timestamp;
+  final String alertName;
+  final double valMin;
 
-  AlertModel({
-    required this.id,
-    required this.name,
-    required this.value,
-    required this.unit,
-    required this.timestamp,
-  });
+  AlertModel({required this.id, required this.alertName, required this.valMin});
 
   factory AlertModel.fromJson(Map<String, dynamic> json) {
     return AlertModel(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? 'Unknown Alert',
-      value: (json['val_min'] ?? 0.0).toDouble(),
-      unit: json['unit'] ?? '°C',
-      timestamp: json['timestamp'] != null
-          ? DateTime.parse(json['timestamp'])
-          : DateTime.now(),
+      id: json['id'],
+      alertName: json['alert_name'],
+      valMin: json['val_min'],
     );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'val_min': value,
-    'unit': unit,
-    'timestamp': timestamp.toIso8601String(),
-  };
-
-  @override
-  String toString() {
-    return 'AlertModel(id: $id, name: $name, value: $value$unit)';
   }
 }
