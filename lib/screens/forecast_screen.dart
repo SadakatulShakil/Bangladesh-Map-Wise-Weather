@@ -21,6 +21,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
 
   // Function to load forecast data
   Future<void> _loadForecastData() async {
+    print("upazilaId: "+ widget.upazilaId.toString());
     final forecastProvider = Provider.of<ForecastProvider>(context, listen: false);
     await forecastProvider.loadForecasts(widget.upazilaId); // Use upazilaId passed to the screen
   }

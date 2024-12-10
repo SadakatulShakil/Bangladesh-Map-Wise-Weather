@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shape_wise_map_forecast/providers/alert_provider.dart';
 import 'package:shape_wise_map_forecast/providers/forecast_provider.dart';
 import 'package:shape_wise_map_forecast/providers/map_provider.dart';
 import 'package:shape_wise_map_forecast/screens/map_screen.dart';
@@ -10,6 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => MapProvider()),
         ChangeNotifierProvider(create: (_) => ForecastProvider()),
+        ChangeNotifierProvider(create: (_) => AlertProvider()),
       ],
       child: const MyApp(),
     ),

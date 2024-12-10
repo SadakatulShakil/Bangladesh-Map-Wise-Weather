@@ -10,7 +10,6 @@ class MapProvider with ChangeNotifier {
 
   Future<void> loadShapes() async {
     isLoading = true;
-    notifyListeners();
     try {
       final data = await _apiService.fetchData('shape');
       shapes = ShapeModel.fromRawJson(data); // Parse entire ShapeModel

@@ -10,7 +10,6 @@ class ForecastProvider with ChangeNotifier {
 
   Future<void> loadForecasts(int upazilaId) async {
     isLoading = true;
-    notifyListeners();
     try {
       final data = await _apiService.fetchData('forecast?upazila_id=$upazilaId');
       final forecastModel = ForecastModel.fromRawJson(data);
