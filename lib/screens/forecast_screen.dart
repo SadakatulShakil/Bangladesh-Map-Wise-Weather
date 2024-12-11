@@ -15,15 +15,13 @@ class _ForecastScreenState extends State<ForecastScreen> {
   @override
   void initState() {
     super.initState();
-    // Load forecast data when the screen opens
     _loadForecastData();
   }
 
-  // Function to load forecast data
+  // Load forecast data based on the upazilaId
   Future<void> _loadForecastData() async {
-    print("upazilaId: "+ widget.upazilaId.toString());
     final forecastProvider = Provider.of<ForecastProvider>(context, listen: false);
-    await forecastProvider.loadForecasts(widget.upazilaId); // Use upazilaId passed to the screen
+    await forecastProvider.loadForecasts(widget.upazilaId);
   }
 
   @override
@@ -31,7 +29,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
     final forecastProvider = Provider.of<ForecastProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('10-Day Weather Forecast')),
+      appBar: AppBar(title: const Text('Weather Forecast')),
       body: forecastProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : forecastProvider.forecasts.isEmpty
@@ -44,7 +42,10 @@ class _ForecastScreenState extends State<ForecastScreen> {
           return Card(
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text(forecast.date, style: const TextStyle(fontWeight: FontWeight.bold)),
+              title: Text(
+                'Date: ${forecast.date}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -69,16 +70,16 @@ class _ForecastScreenState extends State<ForecastScreen> {
     );
   }
 
-  IconData _getWeatherIcon(String iconCode) {
-    // Return icon based on the weather icon code
-    switch (iconCode) {
+  // Map weather type to icons
+  IconData _getWeatherIcon(String weatherType) {
+    switch (weatherType) {
       case 'Sunny':
         return Icons.wb_sunny;
-      case 'cloudy':
+      case 'Cloudy':
         return Icons.cloud;
-      case 'rain':
+      case 'Rainy':
         return Icons.beach_access;
-      case 'windy':
+      case 'Windy':
         return Icons.air;
       default:
         return Icons.help_outline;
