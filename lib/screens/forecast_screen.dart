@@ -32,13 +32,17 @@ class _ForecastScreenState extends State<ForecastScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Weather Forecast'),
-          Text(widget.district +','+widget.upazila+' ⛳', style: TextStyle(fontSize: 12),),
-        ],
-      )),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Weather Forecast'),
+            Text(
+              "${widget.district}, ${widget.upazila} ⛳",
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+      ),
       body: forecastProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : forecastProvider.forecasts.isEmpty
@@ -49,33 +53,109 @@ class _ForecastScreenState extends State<ForecastScreen> {
           final forecast = forecastProvider.forecasts[index];
 
           return Card(
-            margin: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(
-                'Date: ${forecast.date}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Column(
+            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              side: const BorderSide(color: Colors.green, width: 1.0),
+            ),
+            color: Colors.green.shade50,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Day: ${forecast.weekday}'),
-                  Text('Rainfall: ${forecast.rf.valAvg} ${forecast.rfUnit}'),
-                  Text('Temperature: ${forecast.temp.valAvg} ${forecast.tempUnit}'),
-                  Text('Humidity: ${forecast.rh.valAvg} ${forecast.rhUnit}'),
-                  Text('Wind Speed: ${forecast.windspd.valAvg} ${forecast.windspdUnit}'),
-                  Text('Cloud Cover: ${forecast.cldcvr.valAvg} ${forecast.cldcvrUnit}'),
-                  Text('Wind Gust: ${forecast.windgust.valAvg} ${forecast.windgustUnit}'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            forecast.weekday,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            forecast.date,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Icon(
+                            _getWeatherIcon(forecast.type),
+                            size: 30,
+                            color: Colors.orange,
+                          ),
+                          Text(
+                            forecast.type,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12.0),
+                  const Divider(),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildForecastDetail(
+                        icon: Icons.thermostat,
+                        label: 'Temperature',
+                        value: "${forecast.temp.valMin}-${forecast.temp.valMax}${forecast.tempUnit}",
+                      ),
+                      _buildForecastDetail(
+                        icon: Icons.water_drop,
+                        label: 'Precipitation',
+                        value: "${forecast.rf.valAvg}${forecast.rfUnit}",
+                      ),
+                      _buildForecastDetail(
+                        icon: Icons.opacity,
+                        label: 'Humidity',
+                        value: "${forecast.rh.valAvg}${forecast.rhUnit}",
+                      ),
+                      _buildForecastDetail(
+                        icon: Icons.air,
+                        label: 'Wind Speed',
+                        value: "${forecast.windspd.valAvg}${forecast.windspdUnit}",
+                      ),
+                    ],
+                  ),
                 ],
-              ),
-              leading: Icon(
-                _getWeatherIcon(forecast.type),
-                size: 40,
-                color: Colors.blue,
               ),
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildForecastDetail({required IconData icon, required String label, required String value}) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          size: 24,
+          color: Colors.green,
+        ),
+        const SizedBox(height: 4.0),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.black54),
+        ),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 
