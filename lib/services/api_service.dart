@@ -1,11 +1,12 @@
 import 'package:http/http.dart' as http;
 
+import '../config/api_constants.dart';
+
 class ApiService {
-  static const String baseUrl = 'https://bamisapp.bdservers.site/api/exam';
 
   Future<dynamic> fetchData(String endpoint) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/$endpoint'));
+      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}/$endpoint'));
       print("data: "+ response.body);
       if (response.statusCode == 200) {
         return response.body;

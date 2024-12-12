@@ -42,14 +42,20 @@ class _MapScreenState extends State<MapScreen> {
 
     if (mapProvider.isLoading || alertProvider.isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Bangladesh Map')),
+        appBar: AppBar(
+          title: const Text('আবহাওয়া সতর্কবার্তা', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.green,
+        ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (mapProvider.shapes == null || mapProvider.shapes!.result.features.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Bangladesh Map')),
+        appBar: AppBar(
+      title: const Text('আবহাওয়া সতর্কবার্তা', style: TextStyle(color: Colors.white),),
+    backgroundColor: Colors.green,
+    ),
         body: Center(
           child: ElevatedButton(
             onPressed: _loadData,
@@ -60,26 +66,44 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bangladesh Map')),
+      appBar: AppBar(
+          title: const Text('আবহাওয়া সতর্কবার্তা', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.green,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: FlutterMap(
-          options: MapOptions(
-            initialCenter: LatLng(23.6850, 90.3563), // Approximate center of Bangladesh
-            initialZoom: 7.0,
-            minZoom: 6.5,
-            maxZoom: 10.0,
-            onTap: (tapPosition, point) {
-              _handleMapTap(point);
-            },
-          ),
+        padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 10, top: 5),
+        child: Column(
           children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.app',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildCustomButton("Rainfall", context),
+                _buildCustomButton("Temp Max", context),
+                _buildCustomButton("Temp Min", context),
+                _buildCustomButton("Wind Speed", context),
+              ],
             ),
-            PolygonLayer(
-              polygons: _polygonsWithData.map((data) => data['polygon'] as Polygon).toList(),
+            Expanded(
+              child: FlutterMap(
+                options: MapOptions(
+                  initialCenter: LatLng(23.6850, 90.3563), // Approximate center of Bangladesh
+                  initialZoom: 7.0,
+                  minZoom: 6.5,
+                  maxZoom: 10.0,
+                  onTap: (tapPosition, point) {
+                    _handleMapTap(point);
+                  },
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.app',
+                  ),
+                  PolygonLayer(
+                    polygons: _polygonsWithData.map((data) => data['polygon'] as Polygon).toList(),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -185,6 +209,30 @@ class _MapScreenState extends State<MapScreen> {
     if (value > 6) return const Color(0xFFEEDB00);
     if (value > 4) return const Color(0xFFFFA500);
     return const Color(0xFFB22222);
+  }
+
+  Widget _buildCustomButton(String text, BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          side: BorderSide(color: Colors.green),
+        ),
+        elevation: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      ),
+      onPressed: () {
+        // Add navigation or functionality for each button
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('$text Button Pressed'),
+        ));
+      },
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 }
 

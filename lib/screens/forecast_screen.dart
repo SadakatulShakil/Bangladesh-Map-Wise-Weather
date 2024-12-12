@@ -35,13 +35,15 @@ class _ForecastScreenState extends State<ForecastScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Weather Forecast'),
+            const Text('Weather Forecast', style: TextStyle(color: Colors.white),),
             Text(
               "${widget.district}, ${widget.upazila} ⛳",
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12, color: Colors.white),
             ),
           ],
         ),
+        backgroundColor: Colors.green,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: forecastProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
