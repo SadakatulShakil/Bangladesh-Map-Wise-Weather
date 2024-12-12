@@ -4,8 +4,10 @@ import '../providers/forecast_provider.dart';
 
 class ForecastScreen extends StatefulWidget {
   final int upazilaId;
+  final String upazila;
+  final String district;
 
-  const ForecastScreen({Key? key, required this.upazilaId}) : super(key: key);
+  const ForecastScreen({Key? key, required this.upazilaId, required this.upazila, required this.district}) : super(key: key);
 
   @override
   _ForecastScreenState createState() => _ForecastScreenState();
@@ -29,7 +31,14 @@ class _ForecastScreenState extends State<ForecastScreen> {
     final forecastProvider = Provider.of<ForecastProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Weather Forecast')),
+      appBar: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Weather Forecast'),
+          Text(widget.district +','+widget.upazila+' ⛳', style: TextStyle(fontSize: 12),),
+        ],
+      )),
       body: forecastProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : forecastProvider.forecasts.isEmpty
